@@ -1,0 +1,21 @@
+
+
+.bodee{
+    background-image: url("https://images.pexels.com/photos/845619/pexels-photo-845619.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+    background-repeat: no-repeat;
+background-position: center center;
+background-attachment: fixed;
+background-size: cover;
+}
+
+.sun{
+    text-align: center;
+}
+
+#waffles{
+    margin-top: 50px;
+}
+
+.winter{
+    margin-top: 10px;
+}

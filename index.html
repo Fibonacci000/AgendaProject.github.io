@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+        <link rel="stylesheet" href="stylesheet.css" type="text/css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+
+    <title>Agenda App</title>
+</head>
+
+<body class="bodee">
+  
+        <div class="jumbotron-fluid" id="waffles">
+                <div class="container">
+                  <h1 class="display-4">AGENDA <i class="fas fa-th-list"></i></h1>
+                  <p class="lead">WHAT ARE WE DOING TODAY ?</p>
+                </div>
+              </div>
+    <!--<button id='displayAgendaButton'>Display Todos</button>-->
+    <!--<button id='toggleAllButton'>toggle all</button>-->
+    <div class="sun"> 
+    <div class="winter">
+        <button onclick='handlers.toggleAll()' type="button" class="btn btn-outline-danger">Toggle All</button>
+    </div>
+
+
+    <div class="winter">
+        <button onclick='handlers.addAgenda()' type="button" class="btn btn-primary btn-lg">Add <i class="fas fa-list-ol"></i></button>
+        <input id="addAgendaTextInput" type="text">
+    </div>
+
+
+    <div class="winter">
+        <button onclick='handlers.changeAgenda()' type="button" class="btn btn-primary btn-lg">Change</button>
+        <input id='changeAgendaPositionInput' type='number'>
+        <input id='changeAgendaTextInput' type='text'>
+    </div>
+
+
+    <div class="winter">
+        <button onclick='handlers.toggleCompleted()' type="button" class="btn btn-primary btn-lg" >Done</button>
+        <input id='toggleCompletedPositionInput' type='number'>
+    </div>
+
+    
+           <ul></ul>
+
+    
+</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+    <script>
+        var yourAgenda = {
+            agenda: [],
+            addAgenda: function (agendaText) {
+                this.agenda.push({
+                    agendaText: agendaText,
+                    completed: false
+                });
+
+            },
+            changeAgenda: function (position, agendaText) {
+                // this.agenda[position]=newValue;
+                this.agenda[position].agendaText = agendaText;
+
+            },
+            deleteAgenda: function (position) {
+                this.agenda.splice(position, 1);
+
+            },
+            toggleCompleted: function (position) {
+                var todo = this.agenda[position];
+                todo.completed = !todo.completed;
+
+            },
+            toggleAll: function () {
+                var totalAgenda = this.agenda.length;
+                var completedAgenda = 0;
+
+                for (var i = 0; i < totalAgenda; i++) {
+                    if (this.agenda[i].completed === true) {
+                        completedAgenda++;
+                    }
+                }
+                if (totalAgenda === completedAgenda) {
+                    for (var i = 0; i < totalAgenda; i++) {
+                        this.agenda[i].completed = false;
+
+                    }
+                } else {
+                    for (var i = 0; i < totalAgenda; i++) {
+                        this.agenda[i].completed = true;
+
+                    }
+                }
+
+            }
+        };
+
+        var handlers = {
+            addAgenda: function () {
+                var addAgendaTextInput = document.getElementById('addAgendaTextInput');
+                yourAgenda.addAgenda(addAgendaTextInput.value);
+                addAgendaTextInput.value = '';
+                views.displayAgenda();
+            },
+            changeAgenda: function () {
+                var changeAgendaPositionInput = document.getElementById('changeAgendaPositionInput');
+                var changeAgendaTextInput = document.getElementById('changeAgendaTextInput');
+                yourAgenda.changeAgenda(changeAgendaPositionInput.valueAsNumber, changeAgendaTextInput.value);
+                changeAgendaPositionInput.value = '';
+                changeAgendaTextInput.value = '';
+                views.displayAgenda();
+            },
+            deleteAgenda: function (position) {
+                yourAgenda.deleteAgenda(position);
+                views.displayAgenda();
+            },
+            toggleCompleted: function () {
+                var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
+                yourAgenda.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+                toggleCompletedPositionInput.value = '';
+                views.displayAgenda();
+            },
+            toggleAll: function () {
+                yourAgenda.toggleAll();
+                views.displayAgenda();
+            }
+        };
+        //THIS VARIABLE IS RESPONSIBLE FOR VIEWERS TO SEE
+        var views = {
+            displayAgenda: function () {
+                var agendaUl = document.querySelector('ul');
+                agendaUl.innerHTML = '';
+                for (var i = 0; i < yourAgenda.agenda.length; i++) {
+                    var agendaLi = document.createElement('li');
+                    var agenda = yourAgenda.agenda[i];
+                    var agendaTextWithCompletion = '';
+                    if (agenda.completed === true) {
+                        agendaTextWithCompletion = '(x)' + agenda.agendaText;
+                    } else {
+                        agendaTextWithCompletion = '( )' + agenda.agendaText;
+                    }
+
+                    agendaLi.id = i;
+                    agendaLi.textContent = agendaTextWithCompletion;
+                    agendaLi.appendChild(this.createDeleteButton());
+                    agendaUl.appendChild(agendaLi);
+                }
+            },
+            createDeleteButton: function () {
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = 'delete';
+                deleteButton.className = 'deleteButton';
+                return deleteButton;
+            },
+            //!!!!!DONT KNOW WHY THIS WORKS BUT IT WORKS !!!!! (>','<) 
+            setUpEventListeners: function () {
+                var agendaUl = document.querySelector('ul');
+                agendaUl.addEventListener('click', function (event) {
+                    var elementClicked = event.target;
+                    if (elementClicked.className === 'deleteButton') {
+                        handlers.deleteAgenda(parseInt(elementClicked.parentNode.id));
+                    }
+                });
+
+            }
+        };
+
+        views.setUpEventListeners();
+
+
+
+  // var displayAgendaButton=document.getElementById('displayAgendaButton');
+// var toggleAllButton=document.getElementById('toggleAllButton');
+
+
+// displayAgendaButton.addEventListener('click',function(){
+//   yourAgenda.displayAgenda();
+// });
+// toggleAllButton.addEventListener('click',function(){
+//   yourAgenda.toggleAll();
+// });
+
+
+    </script>
+
+
+</body>
+
+</html>
